@@ -1,0 +1,110 @@
+<html>
+<head>
+	<title>TimeifY</title>
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+</head>
+
+<style>
+	* {
+		padding: 0px;
+		margin: 0px;
+	}
+
+	div#menu {
+		position: fixed;
+		top: 0;
+		left: 0;
+	}
+</style>
+
+<body>
+
+<canvas id="canvas" width="500px" height="300px"></canvas>
+ 
+<div id="menu">
+<input type="file" accept="image/*" capture="camera" id="file-input">
+<a href="#" id="rotate">Rotate</a>
+</div>
+
+
+<script>
+var $img;
+
+var docHeight;
+var docWidth;
+
+(function() {
+	docHeight = $( window ).height();
+	docWidth = $( window ).width();
+	console.log("docHeight = " + docHeight + "\tdocWidth = " +  docWidth);
+	$( "#canvas" )
+	.attr("width", docWidth + "px")
+	.attr("height", docHeight + "px");
+})();
+
+$(function() {
+	var canvas = $('#canvas')[0];
+	var context = canvas.getContext('2d');
+	var w = $('#canvas').attr("width");
+	var h = $('#canvas').attr("height");
+	w = w.substring(0, w.length - 2); 
+	h = h.substring(0, h.length - 2);
+	context.fillStyle = "#9ea7b8";
+	context.fillRect(0,0,w,h);
+
+    $('#file-input').change(function(e) {
+        var file = e.target.files[0],
+            imageType = /image.*/;
+        
+        if (!file.type.match(imageType))
+            return;
+        
+        var reader = new FileReader();
+        reader.onload = fileOnload;
+        reader.readAsDataURL(file);
+        
+    });
+    
+    function fileOnload(e) {
+        $img = $('<img>', { src: e.target.result });
+
+        $img.load(function() {
+        	console.log("width: " + this.width);
+        	context.translate(this.width/2, this.height/2);
+        	context.rotate(90*Math.PI/180);
+        	context.translate(-this.width/2, -this.height/2);
+        	context.drawImage(this, 0, 0);
+        });
+
+        
+    }
+});
+</script>
+
+<script>
+ $("a#rotate").on('click', function(e) {
+ 		e.preventDefault();
+ 		var canvas = $('#canvas')[0];
+		var context = canvas.getContext('2d');
+		console.log(context);
+
+		var w = $('#canvas').attr("width");
+		var h = $('#canvas').attr("height");
+		w = w.substring(0, w.length - 2); 
+		h = h.substring(0, h.length - 2);
+		context.fillStyle = "#9ea7b8";
+		context.fillRect(0,0,w,h);
+
+        context.translate(50,50);
+        //context.rotate(45);
+        //context.translate($img.width/2, -$img.height/2);
+        console.log("Rotated!");
+        context.drawImage($img, 0, 0);
+    });
+</script>
+
+
+
+</body>
+</html>

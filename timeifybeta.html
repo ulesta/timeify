@@ -1,0 +1,288 @@
+<html>
+<head>
+	<title>TimeifY</title>
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="hammer.js-1.0.6/hammer.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+</head>
+
+<style>
+	* {
+		padding: 0px;
+		margin: 0px;
+	}
+
+	div#menu {
+		position: fixed;
+		top: 0;
+		left: 0;
+	}
+
+</style>
+
+<body>
+
+<canvas id="canvas" width="500px" height="300px">
+</canvas>
+ 
+<div id="menu">
+<input type="file" accept="image/*" capture="camera" id="file-input">
+<a href="#" id="rotate">Rotate</a>
+<p>
+    <span id="xcoord">0</span>
+    <span id="ycoord">0</span>
+</p>
+</div>
+
+
+<script>
+var $img = new Image();
+var myImage;
+var angle = 0;
+
+var docHeight;
+var docWidth;
+var border = new Image();
+
+var imgX = 0;
+var imgY = 0;
+
+var imgOldX = 0;
+var imgOldY = 0;
+
+var imgWidth;
+var imgHeight;
+
+var canvas;
+var context;
+
+var w, h;
+
+var h
+
+var imgScale = 1.0;
+
+
+
+(function() {
+    // CONSTRUCTOR INITIALIZE ALL VALS
+    canvas = $('#canvas')[0];
+    context = canvas.getContext('2d');
+    border.src = 'MyTimeAsset.png';
+
+	docHeight = $( window ).height();
+	docWidth = $( window ).width();
+
+	console.log("docHeight = " + docHeight + "\tdocWidth = " +  docWidth);
+	$( "#canvas" ).attr("width", docWidth + "px")
+                .attr("height", docHeight + "px");
+
+    w = $('#canvas').attr("width");
+    w = w.substring(0, w.length - 2);
+    h = $('#canvas').attr("height");
+    h = h.substring(0, h.length - 2);
+    console.log("canvasw: " + w + "\tcanvash: " + h);
+
+    // prevent scrolling on some devices
+    $('body').on('touchmove', function(e) {
+        e.preventDefault();
+    });
+
+})();
+
+$(function() {
+	context.fillStyle = "#9ea7b8";
+	context.fillRect(0,0,w,h);
+
+    $('#file-input').change(function(e) {
+        var file = e.target.files[0],
+            imageType = /image.*/;
+        
+        if (!file.type.match(imageType))
+            return;
+        
+        var reader = new FileReader();
+        reader.onload = fileOnload;
+        reader.readAsDataURL(file);
+        
+    });
+    
+    function fileOnload(e) {
+        $img = $('<img>', { src: e.target.result });
+        console.log($img[0]);
+		$img.load(function() {
+        	context.drawImage(this, 0, 0);
+        	myImage = this;
+        	context.drawImage(border,0,0,w,h);
+            imgWidth = myImage.width;
+            imgHeight = myImage.height;
+        });
+    }
+
+    border.onload = function() {
+    	context.drawImage(border,0,0,w,h);
+    };
+
+});
+</script>
+
+
+<script>
+
+function grayScale() {
+    // get image data
+    var imgData = context.getImageData(0, 0, w, h);
+    var data = imgData.data;
+    
+    // loop and change pixel value
+    for(var i = 0; i < data.length; i += 4) {
+        var brightness = 0.34 * data[i] + 0.5 * data[i + 1] + 0.16 * data[i + 2];
+        data[i] = brightness;
+        data[i + 1] = brightness;
+        data[i + 2] = brightness;
+    }    
+        
+    // update image
+    context.putImageData(imgData, 0, 0);
+}
+
+</script>
+
+<script>
+ $("a#rotate").on('click', function(e) {
+        angle += 90;
+        // clear canvas
+        context.fillStyle = "#9ea7b8";
+        context.fillRect(0,0,w,h);
+        // save canvas matrixs
+        context.save();
+    	// Translate to the center point of our image
+        if (myImage) 
+        {
+    	   context.translate(imgX + myImage.width * imgScale * 0.5, imgY + myImage.height * imgScale * 0.5);
+   	 	  // Perform the rotation
+    	   context.rotate(angle * Math.PI / 180);
+    	   // Translate back to the top left of our image
+    	   context.translate(-myImage.width * imgScale * 0.5, -myImage.height * imgScale * 0.5);
+    	   // Finally we draw the image
+   	 	  context.drawImage(myImage, 0, 0, myImage.width*imgScale, myImage.height*imgScale);
+          //context.drawImage(myImage, 0, 0);
+          grayScale();
+        }
+    	// And restore the context ready for the next loop
+        context.drawImage(border,imgX,imgY,50,50);    
+        context.restore();
+   	 	context.drawImage(border,0,0,w,h);
+
+   	 	console.log("Rotated!");
+        console.log("Angle: " + angle);
+    });
+</script>
+
+<script>
+// Hammer multitouch plugin
+    var element = document.getElementById('canvas');
+    var hammertime = Hammer(element).on("drag", function(event) {
+        var dx = event.gesture.deltaX;
+        var dy = event.gesture.deltaY;
+        console.log(dx + "\t" + dy);
+        // clear canvas
+        context.fillStyle = "#9ea7b8";
+        context.fillRect(0,0,w,h);
+        // save canvas matrix
+        context.save();
+        // Translate to the center point of our image
+        if (myImage) 
+        {
+            context.translate(imgX + dx + myImage.width * imgScale * 0.5, imgY + dy + myImage.height * imgScale * 0.5);
+            // Perform the rotation
+            context.rotate(angle * Math.PI / 180);
+            // -- debug -- console.log(angle * Math.PI / 180);
+            // Translate back to the top left of our image
+            context.translate(-myImage.width * imgScale * 0.5, -myImage.height * imgScale * 0.5);
+            // Finally we draw the image
+            //context.scale(imgScale,imgScale);
+            context.drawImage(myImage, 0, 0, myImage.width*imgScale, myImage.height*imgScale);
+            // set image to grayscale
+            grayScale();
+
+        }
+        // And restore the context ready for the next loop
+        context.restore();
+        context.drawImage(border,imgX,imgY,50,50); 
+        context.drawImage(border,0,0,w,h);
+
+        var maxWidth = w - 20;
+      var lineHeight = 30;
+      var x = 20;
+      var y = h/2;
+      // MURICA
+      var text = 'I will develop a creative company which will spark creativity and innovation.';
+
+      context.font = '2em Helvetica';
+      context.fillStyle = '#ffffff';
+
+      wrapText(context, text, x, y, maxWidth, lineHeight);
+
+    }).on("dragend", function(event) {
+        var dx = event.gesture.deltaX;
+        var dy = event.gesture.deltaY;
+        // -- debug -- alert("Drags has ended! dx=" + dx + " dy=" + dy);
+        imgX += dx;
+        imgY += dy;
+    });
+
+
+var hammertime = Hammer(element).on("transform", function(event) {
+        var scale = event.gesture.scale;
+        // clear canvas
+        context.fillStyle = "#9ea7b8";
+        context.fillRect(0,0,w,h);
+        // save canvas matrix
+        context.save();
+        imgScale = scale;
+        if (myImage) 
+        {
+            context.translate(imgX + myImage.width * 0.5, imgY + myImage.height * 0.5);
+            // Perform the rotation
+            context.rotate(angle * Math.PI / 180);
+            // -- debug -- console.log(angle * Math.PI / 180);
+            // Translate back to the top left of our image
+            context.translate(-myImage.width * 0.5, -myImage.height * 0.5);
+            // Finally we draw the image
+            context.scale(scale,scale);
+            context.drawImage(myImage, 0, 0);
+        }
+        context.restore();
+        context.drawImage(border,0,0,w,h);
+        //alert("transform!!");
+    });
+
+
+function wrapText(context, text, x, y, maxWidth, lineHeight) {
+        var words = text.split(' ');
+        var line = '';
+
+        for(var n = 0; n < words.length; n++) {
+          var testLine = line + words[n] + ' ';
+          var metrics = context.measureText(testLine);
+          console.log("font height: " + metrics.emHeightAscent);
+          var testWidth = metrics.width;
+          if (testWidth > maxWidth && n > 0) {
+            context.fillText(line, x, y);
+            line = words[n] + ' ';
+            y += lineHeight;
+          }
+          else {
+            line = testLine;
+          }
+        }
+        context.fillText(line, x, y);
+      }
+
+</script>
+
+
+</body>
+</html>

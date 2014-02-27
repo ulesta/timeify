@@ -1,0 +1,41 @@
+<html>
+<head>
+	<title>TimeifY</title>
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+</head>
+
+<body>
+
+<canvas id="myCanvas" width="500px" height="300px"></canvas>
+
+<script type="text/javascript">
+(function(){
+	/*var canvas = $('#canvas')[0];
+	var context = canvas.getContext('2d');
+	var w = $('#canvas').attr("width");
+	var h = $('#canvas').attr("height");
+	context.fillStyle = "#FF66FF";
+	context.fillRect(0,0,w,h);*/
+	var w = $("#myCanvas").attr("width");
+	var h = $("#myCanvas").attr("height");
+	
+	console.log("w: " + w + "\th: " + h);
+
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+
+	// Create gradient
+	//var grd = ctx.createLinearGradient(0,0,200,0);
+	//grd.addColorStop(0,"red");
+	//grd.addColorStop(1,"white");
+
+	// Fill with gradient
+	ctx.fillStyle = "#000000";
+	ctx.fillRect(0,0,w,h);
+
+})();
+</script>
+
+</body>
+
