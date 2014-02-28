@@ -24,7 +24,7 @@ var yearIn, messageIn;
 //-------------------
 //  CONSTRUCTOR
 //-------------------
-(function() {
+/*(function() {
     canvas = $('#canvas')[0];
     context = canvas.getContext('2d');
     border.src = 'MyTimeAsset.png';
@@ -45,7 +45,30 @@ var yearIn, messageIn;
     $('body').on('touchmove', function(e) {
         e.preventDefault();
     });
-})();
+})();*/
+
+$(document).ready(function() {
+    canvas = $('#canvas')[0];
+    context = canvas.getContext('2d');
+    border.src = './assets/MyTimeAsset.png';
+
+    docHeight = $( window ).height();
+    docWidth = $( window ).width();
+
+    console.log("docHeight = " + docHeight + "\tdocWidth = " +  docWidth);
+    $( "#canvas" ).attr("width", docWidth + "px")
+                .attr("height", docHeight + "px");
+
+    w = $('#canvas').attr("width");
+    w = w.substring(0, w.length - 2);
+    h = $('#canvas').attr("height");
+    h = h.substring(0, h.length - 2);
+    console.log("canvasw: " + w + "\tcanvash: " + h);
+    // prevent scrolling on some devices
+    $('body').on('touchmove', function(e) {
+        e.preventDefault();
+    });
+});
 
 $(function() {
 	context.fillStyle = "#9ea7b8";

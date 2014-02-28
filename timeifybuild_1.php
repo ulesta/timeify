@@ -25,10 +25,10 @@
         <!-- Content goes here! -->
         <!-- Picture Btn -->
         <input type="file" accept="image/*" capture="camera" id="file-input" style="visibility:hidden;" />
-        <img id="cameraBtn" src="<?php print($cameraIMG); ?>" width="75px" height="75px" />
+        <img id="cameraBtn" src="/assets/btn_camera.png" width="75px" height="75px" />
         <!-- Picture Btn End -->
-        <a href="#" id="rotate"><img width="75px" height="75px"  src="https://cdn1.iconfinder.com/data/icons/defaulticon/icons/png/256x256/redo.png"></a>
-        <a href="#" id="save"><img width="55px" height="55px"  src="save.png"></a>
+        <a href="#" id="rotate"><img width="75px" height="75px"  src="/assets/btn_rotate.png"></a>
+        <a href="#" id="save"><img width="75px" height="75px"  src="/assets/btn_download.png"></a>
     </div>
 
     <div class="textForm">
