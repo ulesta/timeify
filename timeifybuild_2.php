@@ -17,7 +17,6 @@
     <link rel="stylesheet" type="text/css" href="css/colors.css">
     <link rel="stylesheet" type="text/css" href="css/text.css">-->
     <link rel="stylesheet" type="text/css" href="css/timestyle.css">
-    <script src="js/timescripts.js"></script>
 </head>
 
 <body>
@@ -34,30 +33,22 @@
             <!-- Picture Btn End -->
             <a href="#" class="menu_btn" id="rotate"><img width="75px" height="75px"  src="./assets/btn_rotate.png"></a>
             <a href="#" class="menu_btn" id="save"><img width="75px" height="75px"  src="./assets/btn_download.png"></a>
-            <a href="#" class="menu_btn" id="toggleLayout" width="75px" height="75px"><img  class="menu_img_btn" width="75px" height="75px" src="./assets/btn_lay.png"></a>
         </div>
     </div>
 
     <div class="textForm">
-        <div class="textFormContent">
-            <h2>YEAR</h2>
-            <input type="text" id="yearIn"></input>
-            <h2>GOAL</h2>
-            <textarea id="messageIn" placeholder="What are your goals?"></textarea>
-            <p>
-                <a href="#" id="donebtn">DONE</a>
-            </p>
-        </div>
-        <div class="dialogToggle">
-            <a href="#" class="toggle_btn" id="toggleDialog"><img src="./assets/btn_toggledialog.png" width="65px" height="40px" /></a>
-        </div>
+        <h2>YEAR</h2>
+        <input type="text" id="yearIn"></input>
+        <h2>GOAL</h2>
+        <textarea id="messageIn" placeholder="What are your goals?"></textarea>
+        <p>
+            <a href="#" id="donebtn">DONE</a>
+        </p>
     </div>
 
     <canvas id="canvas" width="500px" height="300px">
     </canvas>
 
-    <script src="js/listeners.js"></script>
-    <script src="js/touchlisteners.js"></script>
-    <script src="js/canvashelpers.js"></script>
+    <script src="js/timescripts.js"></script>
 </body>
 </html>
